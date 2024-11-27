@@ -1,0 +1,18 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: keycloak-tls
+  namespace: keycloak
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`keycloak.${CLUSTERNAME}.${DOMAINNAME}`)
+      services:
+        - name: keycloak
+          port: 80
+          namespace: keycloak
+  tls:
+    certResolver: le
