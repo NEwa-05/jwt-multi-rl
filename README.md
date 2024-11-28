@@ -22,6 +22,12 @@ kubectl create secret generic hub-license --from-literal=token="${HUB_TOKEN}" -n
 helm upgrade --install traefik traefik/traefik --create-namespace --namespace traefik --values hub/hub-values.yaml
 ```
 
+### Add Hub dashboard ingress if needed
+
+```bash
+envsubst < hub/ingress.yaml | kubectl apply -f -
+```
+
 ## Deploy Keycloak
 
 ### Create keycloak namespace
@@ -68,4 +74,21 @@ kubectl create ns whoami
 kubectl apply -f whoami/whoami.yaml
 envsubst < whoami/middlewares.yaml | kubectl apply -f -
 envsubst < whoami/ingress.yaml | kubectl apply -f -
+```
+
+## Deploy app with RL based on group
+
+### Create apps namespace
+
+```bash
+kubectl create ns whoami
+```
+
+### Deploy whoami, middleware and ingress
+
+```bash
+kubectl apply -f whoami-multi-rl/whoami.yaml
+envsubst < whoami-multi-rl/middlewares.yaml | kubectl apply -f -
+envsubst < whoami-multi-rl/ingress.yaml | kubectl apply -f -
+envsubst < whoami-multi-rl/intern-reroute.yaml | kubectl apply -f -
 ```

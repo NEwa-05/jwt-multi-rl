@@ -1,0 +1,43 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: reroute
+  namespace: whoami
+spec:
+  type: ExternalName
+  externalName: traefik.traefik.svc.cluster.local
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: reroute-admin
+  namespace: whoami
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`whoami.${CLUSTERNAME}.${DOMAINNAME}`) && Header(`groups`, `admin`)
+      services:
+        - name: whoami
+          port: 80
+      middlewares:
+        - name: whoami-rl-admin
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: reroute-support
+  namespace: whoami
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`whoami.${CLUSTERNAME}.${DOMAINNAME}`) && Header(`groups`, `support`)
+      services:
+        - name: whoami
+          port: 80
+      middlewares:
+        - name: whoami-rl-support

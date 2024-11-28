@@ -1,0 +1,20 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami-ingress
+  namespace: whoami
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`whoami.${CLUSTERNAME}.${DOMAINNAME}`)
+      services:
+        - name: reroute
+          port: 80
+      middlewares:
+        - name: whoami-jwt
+  tls:
+    certResolver: le
+
