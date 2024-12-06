@@ -1,13 +1,4 @@
 ---
-kind: Service
-apiVersion: v1
-metadata:
-  name: reroute
-  namespace: whoami
-spec:
-  type: ExternalName
-  externalName: traefik.traefik.svc.cluster.local
----
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
